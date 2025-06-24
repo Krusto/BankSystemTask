@@ -23,6 +23,7 @@ target_link_libraries(Sandbox BankSystemLib)
 enable_testing()
 
 option(ENABLE_COVERAGE "Enable LLVM code coverage" OFF)
+option(ENABLE_TESTS "Enable tests" OFF)
 
 if(ENABLE_COVERAGE)
     message(STATUS "Code coverage enabled")
@@ -33,7 +34,27 @@ endif()
 add_executable(main_test tests/main_test.cpp)
 target_link_libraries(main_test PRIVATE BankSystemLib GTest::gtest_main)
 target_include_directories(main_test PRIVATE ${BANKSYSTEMLIB_INCLUDE})
-if(ENABLE_COVERAGE)
+
+include(GoogleTest)
+gtest_discover_tests(main_test)
+
+if(ENABLE_TESTS AND NOT ENABLE_COVERAGE)
+    message(STATUS "Tests enabled")
+    add_custom_target(run_tests
+        COMMAND ${CMAKE_BINARY_DIR}/main_test
+        COMMENT "Running tests"
+    )
+    add_dependencies(main_test BankSystemLib)
+    add_dependencies(run_tests main_test)
+endif()
+
+if(ENABLE_COVERAGE AND NOT ENABLE_TESTS)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        message(STATUS "Cannot enable coverage for ${CMAKE_CXX_COMPILER_ID}")
+    endif()
+endif()
+
+if(ENABLE_COVERAGE AND NOT ENABLE_TESTS AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
     target_compile_options(BankSystemLib PRIVATE ${COVERAGE_COMPILE_FLAGS})
     target_link_options(BankSystemLib PRIVATE ${COVERAGE_LINK_FLAGS})
@@ -46,12 +67,12 @@ if(ENABLE_COVERAGE)
     set(PROFDATA_FILE "coverage.profdata")
 
     add_custom_target(run_main_program
-        COMMAND LLVM_PROFILE_FILE=${CMAKE_BINARY_DIR}/${PROFRAW_MAIN} ./BankSystem
+        COMMAND LLVM_PROFILE_FILE=${CMAKE_BINARY_DIR}/${PROFRAW_MAIN} ${CMAKE_BINARY_DIR}/Sandbox
         COMMENT "Running main program to generate ${PROFRAW_MAIN}"
     )
 
     add_custom_target(run_tests
-        COMMAND LLVM_PROFILE_FILE=${CMAKE_BINARY_DIR}/${PROFRAW_TESTS} ./main_test
+        COMMAND LLVM_PROFILE_FILE=${CMAKE_BINARY_DIR}/${PROFRAW_TESTS} ${CMAKE_BINARY_DIR}/main_test
         COMMENT "Running tests to generate ${PROFRAW_TESTS}"
     )
 
@@ -62,15 +83,12 @@ if(ENABLE_COVERAGE)
     )
 
     add_custom_target(generate_coverage_report
-        COMMAND llvm-cov-19 show ./Sandbox -instr-profile=${CMAKE_BINARY_DIR}/${PROFDATA_FILE} -format=html -output-dir=${CMAKE_BINARY_DIR}/coverage_report --show-branches=count --show-expansions
+        COMMAND llvm-cov-19 show ${CMAKE_BINARY_DIR}/Sandbox -instr-profile=${CMAKE_BINARY_DIR}/${PROFDATA_FILE} -format=html -output-dir=${CMAKE_SOURCE_DIR}/coverage_report --show-branches=count --show-expansions
         DEPENDS merge_coverage_data
-        COMMENT "Generating HTML coverage report in ${CMAKE_BINARY_DIR}/coverage_report"
+        COMMENT "Generating HTML coverage report in ${CMAKE_SOURCE_DIR}/coverage_report"
     )
 
     add_dependencies(run_main_program Sandbox)
     add_dependencies(run_tests main_test)
     add_dependencies(generate_coverage_report merge_coverage_data)
 endif()
-
-include(GoogleTest)
-gtest_discover_tests(main_test)
