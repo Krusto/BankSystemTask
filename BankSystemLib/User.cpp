@@ -4,15 +4,13 @@ std::unique_ptr<UserFactory> UserFactory::s_Instance;
 
 auto UserFactory::Destroy() -> void { s_Instance.reset(); }
 
-auto UserFactory::GetInstance() -> UserFactory * {
-  if (!s_Instance)
-    s_Instance = std::make_unique<UserFactory>();
-  return s_Instance.get();
+auto UserFactory::GetInstance() -> UserFactory*
+{
+    if (!s_Instance) s_Instance = std::make_unique<UserFactory>();
+    return s_Instance.get();
 }
 
-auto UserFactory::CreateUser(std::string_view name) -> User {
-  return User{name, m_CurrentID++};
-}
+auto UserFactory::CreateUser(std::string_view name) -> User { return User{name, m_CurrentID++}; }
 
 User::User(std::string_view name, UserID id) : m_Name{name}, m_ID{id} {}
 

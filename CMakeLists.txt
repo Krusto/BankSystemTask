@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.22)
 project(BankSystem)
 set(CMAKE_CXX_STANDARD 23)
 
@@ -34,6 +35,21 @@ endif()
 add_executable(main_test tests/main_test.cpp)
 target_link_libraries(main_test PRIVATE BankSystemLib GTest::gtest_main)
 target_include_directories(main_test PRIVATE ${BANKSYSTEMLIB_INCLUDE})
+
+function(target_add_flags target)
+    if(CMAKE_CXX_COMPILE_ID MATCHES "MSVC")
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        target_compile_options(${target} PRIVATE -Wall -Wconversion -Werror -Wextra -Wpedantic)
+
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        target_compile_options(${target} PRIVATE -Wall -Wconversion -Werror -Wextra -Wpedantic)
+    endif()
+endfunction(target_add_flags)
+
+target_add_flags(BankSystemLib)
+target_add_flags(Sandbox)
+target_add_flags(main_test)
+
 
 include(GoogleTest)
 gtest_discover_tests(main_test)

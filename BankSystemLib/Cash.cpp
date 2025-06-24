@@ -35,7 +35,7 @@ auto CashT::operator>(const CashT& other) const -> bool { return AsDouble() > Cu
 
 auto CashT::operator==(const CashT& other) const -> bool { return AsDouble() == Currency::AsBGN(other).AsDouble(); }
 
-auto CashT::AsStr(double value) -> std::string
+auto CashT::AsStr(long double value) -> std::string
 {
     std::stringstream ss;
     ss << value;

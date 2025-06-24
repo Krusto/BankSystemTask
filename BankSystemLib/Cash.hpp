@@ -25,7 +25,7 @@ public:
     auto Add(const CashT& other) -> void;
     auto Sub(const CashT& other) -> void;
 
-    static auto AsStr(double value) -> std::string;
+    static auto AsStr(long double value) -> std::string;
 
 public:
     auto operator<(const CashT& other) const -> bool;

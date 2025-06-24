@@ -6,7 +6,7 @@
 [![GitHub Code Size](https://img.shields.io/github/languages/code-size/Krusto/BankSystemTask)](https://github.com/Krusto/BankSystemTask)
 [![GitHub Fork](https://img.shields.io/github/forks/Krusto/BankSystemTask?style=social)](https://github.com/Krusto/BankSystemTask)
 ![GitHub License](https://img.shields.io/github/license/Krusto/BankSystemTask)
-![GitHub Release](https://img.shields.io/github/v/release/Krusto/BankSystemTask)			
+![GitHub Release](https://img.shields.io/github/v/release/Krusto/BankSystemTask)
 
 - Modern C++ (C++23)
 - Cross-platform with CMake
@@ -17,7 +17,7 @@
 
 ### Prerequisites
 
-- [CMake](https://cmake.org/download/) (version 3.15+)
+- [CMake](https://cmake.org/download/) (version 3.22+)
 - A C++ compiler (GCC, Clang, MSVC, etc.)
 - Git
 - llvm-19(for test coverage)
@@ -37,7 +37,7 @@ cmake --build .
 Generating Coverage Data
 
 ```bash
-		
+	
 cmake --build build --target generate_coverage_report
 ```
 
