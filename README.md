@@ -6,7 +6,7 @@
 [![GitHub Code Size](https://img.shields.io/github/languages/code-size/Krusto/BankSystemTask)](https://github.com/Krusto/BankSystemTask)
 [![GitHub Fork](https://img.shields.io/github/forks/Krusto/BankSystemTask?style=social)](https://github.com/Krusto/BankSystemTask)
 ![GitHub License](https://img.shields.io/github/license/Krusto/BankSystemTask)
-![GitHub Release](https://img.shields.io/github/v/release/Krusto/BankSystemTask)			atures
+![GitHub Release](https://img.shields.io/github/v/release/Krusto/BankSystemTask)			
 
 - Modern C++ (C++23)
 - Cross-platform with CMake
